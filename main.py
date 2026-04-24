@@ -32,7 +32,7 @@ class TicTacTeo:
     def display_board(self):
         print("\nCurrent Board:")
         for row in self.board:
-            print(" | ".join(str(cell) for cell in row))
+            print(" | ".join(self.human_mark if cell == 3 else self.ai_mark if cell == 5 else "-" for cell in row))
             print("-" * 9)
     
     def player_move(self):
@@ -57,7 +57,7 @@ class TicTacTeo:
     def make_move(self, row, col, mark):
         if self.board[row][col] != 0:
             raise ValueError("Cell is already occupied. Choose another cell.")
-        self.board[row][col] = mark
+        self.board[row][col] = 3 if mark == self.human_mark else 5
         self.total_moves += 1
         self.display_board()
 
