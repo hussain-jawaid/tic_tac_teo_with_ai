@@ -24,6 +24,7 @@ class TicTacTeo:
         self.ai_mark = "o" if choice == "x" else "x"
 
         self.display_board()
+        self.human_move()
 
     def display_board(self):
         print("\nCurrent Board:")
@@ -36,7 +37,7 @@ class TicTacTeo:
             )
             print("-" * 9)
 
-    def player_move(self):
+    def human_move(self):
         while True:
             try:
                 move = input("Enter your move (row and column from 0-2, e.g., '1 2'): ")
@@ -51,15 +52,19 @@ class TicTacTeo:
     def ai_move(self):
         while True:
             try:
-                row, col = self.get_ai_move()
+                row, col = self.get_ai_move_v1()
                 self.make_move(row, col, self.ai_mark)
                 break
             except ValueError as e:
                 print(f"AI move error: {e} Retrying...")
-    
-    def get_ai_move(self):
-        pass
 
+    def get_ai_move_v1(self):
+        # Selects the first available empty cell on the board for the AI's move
+        for i, row in enumerate(self.board):
+            for j, col in enumerate(row):
+                if col == 0:
+                    return i, j
+             
     def make_move(self, row, col, mark):
         if self.board[row][col] != 0:
             raise ValueError("Cell is already occupied. Choose another cell.")
