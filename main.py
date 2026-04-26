@@ -5,13 +5,29 @@ class TicTacTeo:
         self.ai_mark = None
         self.total_moves = 0
         self.humnan_turn = True
+        self.difficulty_level = None
         # Initialize the game board.
         self.board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
 
+        # Set the difficulty level.
+        self.set_difficulty_level()
         # Take user input to set the marks for both players.
         self.set_marks()
         # Make the human's first move.
         self.human_move()
+    
+    def set_difficulty_level(self):
+        while True:
+            try:
+                level = input("Choose difficulty level (Enter: Easy, Medium, or Hard): ").strip().lower()
+                if level not in {"easy", "medium", "hard"}:
+                    raise ValueError("Invalid difficulty level. Choose 'Easy', 'Medium', or 'Hard'.")
+                break
+            except ValueError as e:
+                print(f"Invalid input: {e} Please try again.")
+        self.difficulty_level = 1 if level == "easy" else 2 if level == "medium" else 3
+
+        print(f"\nDifficulty Level is {level.upper()}")
 
     def set_marks(self):
         while True:
@@ -55,7 +71,7 @@ class TicTacTeo:
     def ai_move(self):
         while True:
             try:
-                row, col = self.get_ai_move_v1()
+                row, col = (self.get_ai_move_v1() if self.difficulty_level == 1 else self.get_ai_move_v2() if self.difficulty_level == 2 else self.get_ai_move_v3())  # Choose AI move method based on difficulty
                 print(f"\nAI move: {row}, {col}")
                 self.make_move(row, col, self.ai_mark)
                 break
@@ -68,6 +84,12 @@ class TicTacTeo:
             for j, col in enumerate(row):
                 if col == 0:
                     return i, j
+    
+    def get_ai_move_v2(self):
+        pass
+    
+    def get_ai_move_v3(self):
+        pass
 
     def make_move(self, row, col, mark):
         if self.board[row][col] != 0:
