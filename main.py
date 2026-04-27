@@ -79,14 +79,27 @@ class TicTacTeo:
                 print(f"AI move error: {e} Retrying...")
 
     def get_ai_move_v1(self):
-        # Selects the first available empty cell on the board for the AI's move
+        # Selects the first available empty cell on the board.
         for i, row in enumerate(self.board):
             for j, col in enumerate(row):
                 if col == 0:
                     return i, j
     
     def get_ai_move_v2(self):
-        pass
+        if self.total_moves == 1:
+            return self.get_ai_move_v1()
+        for i, row in enumerate(self.board):
+            if sum(row) == 6:
+                for j, col in enumerate(row):
+                    if col == 0:
+                        return i, j
+        for col in range(3):
+            if sum(self.board[row][col] for row in range(3)) == 6:
+                for row in range(3):
+                    if self.board[row][col] == 0:
+                        return row, col
+
+        return self.get_ai_move_v1()
     
     def get_ai_move_v3(self):
         pass
