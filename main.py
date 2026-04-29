@@ -80,6 +80,7 @@ class TicTacTeo:
 
     def get_ai_move_v1(self):
         """
+        Simple AI:
         Selects the first available empty cell on the board.
         """
         for i, row in enumerate(self.board):
@@ -88,44 +89,97 @@ class TicTacTeo:
     
     def get_ai_move_v2(self):
         """
-        Enhanced defensive AI:
+        Defensive AI:
         Blocks the human player's imminent winning path (row, column, or diagonal)
         if two of their marks are present and a third cell is empty.
         Falls back to the first available cell otherwise.
         """
 
         if self.total_moves > 1:
-            # Block rows where the human has two marks and one empty
-            for i, row in enumerate(self.board):
-                if row.count(3) == 2 and row.count(0) == 1:
-                    j = row.index(0)
-                    return i, j
-
-            # Block columns where the human has two marks and one empty
-            for col in range(3):
-                col_vals = [self.board[row][col] for row in range(3)]
-                if col_vals.count(3) == 2 and col_vals.count(0) == 1:
-                    row = col_vals.index(0)
-                    return row, col
-
-            # Block primary diagonal
-            diag = [self.board[i][i] for i in range(3)]
-            if diag.count(3) == 2 and diag.count(0) == 1:
-                idx = diag.index(0)
-                return idx, idx
-
-            # Block secondary diagonal
-            sec_diag = [self.board[i][2 - i] for i in range(3)]
-            if sec_diag.count(3) == 2 and sec_diag.count(0) == 1:
-                idx = sec_diag.index(0)
-                return idx, 2 - idx
+            # It'll get the AI defensive move.
+            move = self.get_ai_defensive_move()
+            if move:
+                return move
 
         # No immediate threat found; choose first available cell
         move = self.get_ai_move_v1()
-        return move
+        return move 
     
     def get_ai_move_v3(self):
-        pass
+        """
+        Advanced AI:
+        Analyzes the board to find the best move to win the game.
+        """
+        if self.total_moves == 1:
+            if self.board[1][1] == 0:
+                return 1, 1
+            else:
+                return self.get_ai_move_v1()
+        
+        # Find the move to win the game
+        move = self.get_ai_winning_move()
+        if move:
+            return move
+        
+        # Find the move for defence
+        move = self.get_ai_defensive_move()
+        if move:
+            return move
+
+        # Analyzes the board to find the best move to win the game.
+        
+
+    def get_ai_winning_move(self):
+        # Find rows to win where AI has two marks and one empty
+        for i, row in enumerate(self.board):
+            if row.count(5) == 2 and row.count(0) == 1:
+                j = row.index(0)
+                return i, j
+
+        # Find columns to win where AI has two marks and one empty
+        for col in range(3):
+            col_vals = [self.board[row][col] for row in range(3)]
+            if col_vals.count(5) == 2 and col_vals.count(0) == 1:
+                row = col_vals.index(0)
+                return row, col
+
+        # Find primary dioganal to win
+        diag = [self.board[i][i] for i in range(3)]
+        if diag.count(5) == 2 and diag.count(0) == 1:
+            idx = diag.index(0)
+            return idx, idx
+
+        # Find secondary diagonal to win
+        sec_diag = [self.board[i][2 - i] for i in range(3)]
+        if sec_diag.count(5) == 2 and sec_diag.count(0) == 1:
+            idx = sec_diag.index(0)
+            return idx, 2 - idx
+
+    def get_ai_defensive_move(self):
+        # Block rows where the human has two marks and one empty
+        for i, row in enumerate(self.board):
+            if row.count(3) == 2 and row.count(0) == 1:
+                j = row.index(0)
+                return i, j
+
+        # Block columns where the human has two marks and one empty
+        for col in range(3):
+            col_vals = [self.board[row][col] for row in range(3)]
+            if col_vals.count(3) == 2 and col_vals.count(0) == 1:
+                row = col_vals.index(0)
+                return row, col
+
+        # Block primary diagonal
+        diag = [self.board[i][i] for i in range(3)]
+        if diag.count(3) == 2 and diag.count(0) == 1:
+            idx = diag.index(0)
+            return idx, idx
+
+        # Block secondary diagonal
+        sec_diag = [self.board[i][2 - i] for i in range(3)]
+        if sec_diag.count(3) == 2 and sec_diag.count(0) == 1:
+            idx = sec_diag.index(0)
+            return idx, 2 - idx
 
     def make_move(self, row, col, mark):
         if self.board[row][col] != 0:
