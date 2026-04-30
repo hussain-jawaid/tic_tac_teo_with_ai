@@ -126,8 +126,24 @@ class TicTacTeo:
         if move:
             return move
 
-        # Analyzes the board to find the best move to win the game.
+        # Analyzes the board to find the best move to attack.
+        move = self.get_ai_attacking_move()
+        return move
+
+    def get_ai_attacking_move(self):
+        # Find the rows with one AI mark and 2 empty cell
+        for i, row in enumerate(self.board):
+            if row.count(0) == 2 and row.count(5) == 1:
+                j = row.index(0)
+                return i, j
         
+        # Find the columns with one AI mark and 2 empty cell
+        for col in range(3):
+            col_val = [self.board[row][col] for row in range(3)]
+            if col_val.count(0) == 2 and col_val.count(5) == 1:
+                row = col_val.index(0)
+                return row, col
+
 
     def get_ai_winning_move(self):
         # Find rows to win where AI has two marks and one empty
