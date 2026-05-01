@@ -3,11 +3,18 @@ class TicTacTeo:
         """The game class. Initializes the game board and sets the marks for the human and AI players."""
         self.human_mark = None
         self.ai_mark = None
+        self.human_number = 3
+        self.ai_number = 5
+        self.neutral_number = 0
         self.total_moves = 0
         self.humnan_turn = True
         self.difficulty_level = None
         # Initialize the game board.
-        self.board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+        self.board = [
+            [self.neutral_number, self.neutral_number, self.neutral_number],
+            [self.neutral_number, self.neutral_number, self.neutral_number],
+            [self.neutral_number, self.neutral_number, self.neutral_number],
+        ]
 
         # Set the difficulty level.
         self.set_difficulty_level()
@@ -50,7 +57,11 @@ class TicTacTeo:
         for row in self.board:
             print(
                 " | ".join(
-                    self.human_mark if cell == 3 else self.ai_mark if cell == 5 else "-"
+                    self.human_mark
+                    if cell == self.human_number
+                    else self.ai_mark
+                    if cell == self.ai_number
+                    else "-"
                     for cell in row
                 )
             )
@@ -84,8 +95,8 @@ class TicTacTeo:
         Selects the first available empty cell on the board.
         """
         for i, row in enumerate(self.board):
-                if row.count(0) >= 1:
-                    return i, row.index(0)
+                if row.count(self.neutral_number) >= 1:
+                    return i, row.index(self.neutral_number)
     
     def get_ai_move_v2(self):
         """
@@ -111,11 +122,11 @@ class TicTacTeo:
         Analyzes the board to find the best move to win the game.
         """
         if self.total_moves == 1:
-            if self.board[1][1] == 0:
+            if self.board[1][1] == self.neutral_number:
                 return 1, 1
             else:
                 return self.get_ai_move_v1()
-        
+
         # Find the move to win the game
         move = self.get_ai_winning_move()
         if move:
@@ -133,86 +144,88 @@ class TicTacTeo:
     def get_ai_attacking_move(self):
         # Find rows with one AI mark and 2 empty cell
         for i, row in enumerate(self.board):
-            if row.count(0) == 2 and row.count(5) == 1:
-                j = row.index(0)
+            if row.count(self.neutral_number) == 2 and row.count(self.ai_number) == 1:
+                j = row.index(self.neutral_number)
                 return i, j
         
         # Find columns with one AI mark and 2 empty cell
         for col in range(3):
             col_val = [self.board[row][col] for row in range(3)]
-            if col_val.count(0) == 2 and col_val.count(5) == 1:
-                row = col_val.index(0)
+            if col_val.count(self.neutral_number) == 2 and col_val.count(self.ai_number) == 1:
+                row = col_val.index(self.neutral_number)
                 return row, col
         
         # Find primary dioganal to win
         diag = [self.board[i][i] for i in range(3)]
-        if diag.count(0) == 2 and diag.count(5) == 1:
-            idx = diag.index(0)
+        if diag.count(self.neutral_number) == 2 and diag.count(self.ai_number) == 1:
+            idx = diag.index(self.neutral_number)
             return idx, idx
 
         # Find secondary diagonal to win
         sec_diag = [self.board[i][2 - i] for i in range(3)]
-        if sec_diag.count(0) == 2 and sec_diag.count(5) == 1:
-            idx = sec_diag.index(0)
+        if sec_diag.count(self.neutral_number) == 2 and sec_diag.count(self.ai_number) == 1:
+            idx = sec_diag.index(self.neutral_number)
             return idx, 2 - idx
 
 
     def get_ai_winning_move(self):
         # Find rows to win where AI has two marks and one empty
         for i, row in enumerate(self.board):
-            if row.count(5) == 2 and row.count(0) == 1:
-                j = row.index(0)
+            if row.count(self.ai_number) == 2 and row.count(self.neutral_number) == 1:
+                j = row.index(self.neutral_number)
                 return i, j
 
         # Find columns to win where AI has two marks and one empty
         for col in range(3):
             col_vals = [self.board[row][col] for row in range(3)]
-            if col_vals.count(5) == 2 and col_vals.count(0) == 1:
-                row = col_vals.index(0)
+            if col_vals.count(self.ai_number) == 2 and col_vals.count(self.neutral_number) == 1:
+                row = col_vals.index(self.neutral_number)
                 return row, col
 
         # Find primary dioganal to win
         diag = [self.board[i][i] for i in range(3)]
-        if diag.count(5) == 2 and diag.count(0) == 1:
-            idx = diag.index(0)
+        if diag.count(self.ai_number) == 2 and diag.count(self.neutral_number) == 1:
+            idx = diag.index(self.neutral_number)
             return idx, idx
 
         # Find secondary diagonal to win
         sec_diag = [self.board[i][2 - i] for i in range(3)]
-        if sec_diag.count(5) == 2 and sec_diag.count(0) == 1:
-            idx = sec_diag.index(0)
+        if sec_diag.count(self.ai_number) == 2 and sec_diag.count(self.neutral_number) == 1:
+            idx = sec_diag.index(self.neutral_number)
             return idx, 2 - idx
 
     def get_ai_defensive_move(self):
         # Block rows where the human has two marks and one empty
         for i, row in enumerate(self.board):
-            if row.count(3) == 2 and row.count(0) == 1:
-                j = row.index(0)
+            if row.count(self.human_number) == 2 and row.count(self.neutral_number) == 1:
+                j = row.index(self.neutral_number)
                 return i, j
 
         # Block columns where the human has two marks and one empty
         for col in range(3):
             col_vals = [self.board[row][col] for row in range(3)]
-            if col_vals.count(3) == 2 and col_vals.count(0) == 1:
-                row = col_vals.index(0)
+            if col_vals.count(self.human_number) == 2 and col_vals.count(self.neutral_number) == 1:
+                row = col_vals.index(self.neutral_number)
                 return row, col
 
         # Block primary diagonal
         diag = [self.board[i][i] for i in range(3)]
-        if diag.count(3) == 2 and diag.count(0) == 1:
-            idx = diag.index(0)
+        if diag.count(self.human_number) == 2 and diag.count(self.neutral_number) == 1:
+            idx = diag.index(self.neutral_number)
             return idx, idx
 
         # Block secondary diagonal
         sec_diag = [self.board[i][2 - i] for i in range(3)]
-        if sec_diag.count(3) == 2 and sec_diag.count(0) == 1:
-            idx = sec_diag.index(0)
+        if sec_diag.count(self.human_number) == 2 and sec_diag.count(self.neutral_number) == 1:
+            idx = sec_diag.index(self.neutral_number)
             return idx, 2 - idx
 
     def make_move(self, row, col, mark):
-        if self.board[row][col] != 0:
+        if self.board[row][col] != self.neutral_number:
             raise ValueError("Cell is already occupied. Choose another cell.")
-        self.board[row][col] = 3 if mark == self.human_mark else 5
+        self.board[row][col] = (
+            self.human_number if mark == self.human_mark else self.ai_number
+        )
         self.total_moves += 1
         self.display_board()
 
@@ -227,34 +240,54 @@ class TicTacTeo:
     def check_winner(self):
         # Check for a winner in the rows.
         for row in self.board:
-            if sum(row) == 9:
+            if sum(row) == self.human_number * 3:
                 print("Human wins!")
                 return True
-            elif sum(row) == 15:
+            elif sum(row) == self.ai_number * 3:
                 print("AI wins!")
                 return True
         # Check for a winner in the columns.
         for col in range(3):
-            if sum(self.board[row][col] for row in range(3)) == 9:
+            if sum(self.board[row][col] for row in range(3)) == self.human_number * 3:
                 print("Human wins!")
                 return True
-            elif sum(self.board[row][col] for row in range(3)) == 15:
+            elif sum(self.board[row][col] for row in range(3)) == self.ai_number * 3:
                 print("AI wins!")
                 return True
 
         # Check for a winner in the diagonals.
         # Primary diagonal
-        if self.board[0][0] == self.board[1][1] == self.board[2][2] == 3:
+        if (
+            self.board[0][0]
+            == self.board[1][1]
+            == self.board[2][2]
+            == self.human_number
+        ):
             print("You wins!")
             return True
-        elif self.board[0][0] == self.board[1][1] == self.board[2][2] == 5:
+        elif (
+            self.board[0][0]
+            == self.board[1][1]
+            == self.board[2][2]
+            == self.ai_number
+        ):
             print("AI wins!")
             return True
         # Secondary diagonal
-        if self.board[0][2] == self.board[1][1] == self.board[2][0] == 3:
+        if (
+            self.board[0][2]
+            == self.board[1][1]
+            == self.board[2][0]
+            == self.human_number
+        ):
             print("You wins!")
             return True
-        elif self.board[0][2] == self.board[1][1] == self.board[2][0] == 5:
+        elif (
+            self.board[0][2]
+            == self.board[1][1]
+            == self.board[2][0]
+            == self.ai_number
+        ):
             print("AI wins!")
             return True
 
