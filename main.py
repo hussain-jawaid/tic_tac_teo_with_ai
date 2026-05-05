@@ -169,7 +169,9 @@ class TicTacTeo:
         if sec_diag.count(self.neutral_number) == 2 and sec_diag.count(self.ai_number) == 1:
             idx = sec_diag.index(self.neutral_number)
             return idx, 2 - idx
-
+        
+        # If no attacking move has been found, fallback to the original AI move logic
+        return self.get_ai_move_v1()
 
     def get_ai_winning_move(self):
         # Find rows to win where AI has two marks and one empty
