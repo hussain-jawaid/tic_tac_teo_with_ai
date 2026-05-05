@@ -124,8 +124,6 @@ class TicTacTeo:
         if self.total_moves == 1:
             if self.board[1][1] == self.neutral_number:
                 return 1, 1
-            else:
-                return self.get_ai_move_v1()
 
         # Find the move to win the game
         move = self.get_ai_winning_move()
@@ -142,6 +140,11 @@ class TicTacTeo:
         return move
 
     def get_ai_attacking_move(self):
+        # Capture the corner cells first
+        for (i, j) in [(0, 0), (0, 2), (2, 0), (2, 2)]:
+            if self.board[i][j] == self.neutral_number:
+                return i, j
+     
         # Find rows with one AI mark and 2 empty cell
         for i, row in enumerate(self.board):
             if row.count(self.neutral_number) == 2 and row.count(self.ai_number) == 1:
